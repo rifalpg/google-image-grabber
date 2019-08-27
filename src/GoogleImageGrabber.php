@@ -1,5 +1,6 @@
 <?php namespace Buchin\GoogleImageGrabber;
 
+use App\Title;
 use Exception;
 use PHPHtmlParser\Dom;
 use __;
@@ -10,16 +11,27 @@ use __;
 class GoogleImageGrabber
 {
 
-
-    public static function grab($keyword, $limit = 10000000, $proxy = null)
+    public static function grab($keyword, $limit = 10000000, $blacklist_domain= [], $proxy = null, $loc = 'id')
     {
-        $blacklist_domain = [
-            'cdn.brilio.net',
-            'lookaside.fbsbx.com',
-            'cdn14.1cak.com'
+
+        $locs = [
+            'id' => [
+                'hl' => 'id',
+                'gl' => 'id'
+            ],
+            'en' => [
+                'hl' => 'en',
+                'gl' => 'us'
+            ],
+            'es' => [
+                'hl' => 'es',
+                'gl' => 'es'
+            ],
         ];
 
-        $url = "https://www.google.com/search?q=" . urlencode($keyword) . "&source=lnms&tbm=isch&tbs=";
+        $loc = $locs[$loc];
+
+        $url = "https://www.google.com/search?q=" . urlencode($keyword) . "&source=lnms&tbm=isch&hl=" . $loc['h1'] . "&gl=" . $loc['gl'] . "&tbs=";
 
         $ua = \Campo\UserAgent::random([
             'os_type' => ['Windows', 'OS X'],
